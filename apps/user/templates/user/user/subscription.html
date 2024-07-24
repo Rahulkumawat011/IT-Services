@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscribe to Service</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        .card-custom {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .btn-custom {
+            background-color: #F37254;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #e35d46;
+        }
+        .content-wrapper {
+            max-width: 600px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="container content-wrapper">
+    <div class="card card-custom">
+        <div class="card-body text-center">
+            <img src="{{ service.service_image.url }}" alt="{{ service.service_name }}" class="img-fluid rounded" style="max-width: 200px;">
+            <h2 class="my-4">Subscribe to {{ service.service_name }}</h2>
+            <p class="lead">Price: ₹{{ service.service_price }}</p>
+            <p class="lead">Tax: ₹{{ service.service_tax }}</p>
+            <p class="lead">Total: ₹{{ service.total_price }}</p>
+
+            <form action="{% url 'razorpay_callback' %}" method="POST">
+                {% csrf_token %}
+                <script
+                    src="https://checkout.razorpay.com/v1/checkout.js"
+                    data-key="{{ razorpay_merchant_key }}"
+                    data-amount="{{ amount }}"
+                    data-currency="INR"
+                    data-order_id="{{ razorpay_order_id }}"
+                    data-buttontext="Pay with Razorpay"
+                    data-name="IT Services"
+                    data-description="Subscription to {{ service.service_name }}"
+                    data-image="{{ service.service_image.url }}"
+                    data-prefill.name="{{ request.user.get_full_name }}"
+                    data-prefill.email="{{ request.user.email }}"
+                    data-theme.color="#F37254">
+                </script>
+                <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+                <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+                <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+                <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                <input type="hidden" name="service_id" value="{{ service.id }}">
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

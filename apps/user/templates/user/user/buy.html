@@ -1,0 +1,82 @@
+{% extends "frontend/base.html" %}
+{% load widget_tweaks %}
+
+{% block body %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Service Detail</h1>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <div class="card shadow-sm">
+          <div class="card-header bg-success text-white">
+            <h3 class="card-title">Service Information</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <div class="row mb-3 ">
+              <div class="col-12">
+                <img src="{{ services.service_image.url }}" alt="{{ services.service_name }}" class="img-fluid rounded" style="max-width: 300px;">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                {% if services.active %}
+                  <span class="badge badge-success">Active</span>
+                {% else %}
+                  <span class="badge badge-danger">Inactive</span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6"><h5>Name</h5></div>
+              <div class="col-6"><p>{{ services.service_name }}</p></div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6"><h5>Package</h5></div>
+              <div class="col-6"><p>{{ services.service_package }}</p></div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6"><h5>Payment Terms</h5></div>
+              <div class="col-6"><p>{{ services.payment_terms }}</p></div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6"><h5>Price</h5></div>
+              <div class="col-6"><p>${{ services.service_price }}</p></div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6"><h5>Tax (18%)</h5></div>
+              <div class="col-6"><p>${{ services.service_tax }}</p></div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6"><h5>Total Price (Including Tax)</h5></div>
+              <div class="co0l-6"><p>${{ services.total_price }}</p></div>
+            </div>
+            <div class="col-sm-12">
+                <ol class="breadcrumb float-sm-right">
+                    <button class="btn btn-success"><a class="text-white" href="{% url 'subscribe-service' service_id=services.id %}">Subscription</a></button>
+                </ol>
+             </div>
+          </div>
+          <!-- /.card-body -->
+        </div>
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+{% endblock %}
