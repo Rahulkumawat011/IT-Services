@@ -30,7 +30,7 @@ urlpatterns = [
     # Frontend User
     path('', LandingView.as_view(), name="landing"),
     path('login/', LoginView.as_view(), name="user-login"),
-    path('register/', RegisterView.as_view(), name="user-register"),
+    # path('register/', RegisterView.as_view(), name="user-register"),
     path('logout/', LogoutView.as_view(), name="user-logout"),
     path('profile/', UpdateUserProfileView.as_view(), name="user-profile"),
     path('change-password/', ChangeUserSelfPasswordView.as_view(), name="user-change-password"),
@@ -41,4 +41,7 @@ urlpatterns = [
     path('subscribe/<int:service_id>/', views.subscribe_service, name='subscribe-service'),
     path('razorpay/callback/', views.razorpay_callback, name='razorpay_callback'),
     path('subscription/success/', views.subscription_success, name='subscription_success'),
+    # email
+    path('register/', UserRegistrationView.as_view(), name='user-register'),
+    path('otp-confirmation/', OTPConfirmationView.as_view(), name='otp-confirmation'),
 ]

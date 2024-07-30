@@ -216,11 +216,19 @@ DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
 
 # #Email Server
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'deepaktestacc@gmail.com'
+# EMAIL_HOST_PASSWORD = 'deepak@123'
+# EMAIL_USE_TLS = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'deepaktestacc@gmail.com'
-EMAIL_HOST_PASSWORD = 'deepak@123'
 EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'rajputking7976@gmail.com'
+EMAIL_HOST_PASSWORD = 'mplqdyylyyugtrat'
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 APPEND_SLASH = False
 

@@ -1,0 +1,25 @@
+{% extends "frontend/initial.html" %}
+{% load static %}
+{% block body %}
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <a class="h1"><b>{{configs.APP_NAME}}</b></a>
+    </div>
+    <div class="card-body">
+      <p class="login-box-msg">Enter OTP to confirm registration</p>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="row">
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary">Confirm OTP</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+{% endblock %}

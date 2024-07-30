@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 from django.urls import reverse
 
+from apps.user.models import UserOTP
 
 User = get_user_model()
 
@@ -51,3 +52,8 @@ class EditUserProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
+
+class OTPForm(forms.ModelForm):
+    class Meta:
+        model=UserOTP
+        fields=['otp']

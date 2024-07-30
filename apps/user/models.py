@@ -54,3 +54,8 @@ class Subscription(models.Model):
 
     def _str_(self):
         return f"Subscription by {self.user} for {self.service}"
+
+
+class UserOTP(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    otp = models.CharField(max_length=6)

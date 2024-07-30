@@ -1,6 +1,9 @@
 import datetime
 from random import randint
 import pandas as pd
+from django.core.mail import send_mail
+
+import random
 import razorpay
 from django.conf import settings
 from django.contrib import messages
@@ -19,8 +22,8 @@ from django.views.decorators.cache import never_cache
 from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, DetailView
 from application.custom_classes import AjayDatatableView, AdminRequiredMixin, UserRequiredMixin
 
-from .forms import CreateUserForm, EditUserForm, UserSignupForm, EditUserProfileForm
-from .models import Subscription
+from .forms import CreateUserForm, EditUserForm, UserSignupForm, EditUserProfileForm, OTPForm
+from .models import Subscription, UserOTP
 from ..service.models import Service
 
 User = get_user_model()
@@ -159,12 +162,12 @@ class LoginView(View):
             return HttpResponseRedirect(reverse(self.login_url))
 
 
-class RegisterView(SuccessMessageMixin, CreateView):
-    model = User
-    form_class = UserSignupForm
-    template_name = 'user/user/register.html'
-    success_message = "You have registered successfully"
-    success_url = reverse_lazy('user-login')
+# class RegisterView(SuccessMessageMixin, CreateView):
+#     model = User
+#     form_class = UserSignupForm
+#     template_name = 'user/user/register.html'
+#     success_message = "You have registered successfully"
+#     success_url = reverse_lazy('user-login')
 
 
 class LogoutView(UserRequiredMixin, LoginRequiredMixin, View):
@@ -325,3 +328,48 @@ def razorpay_callback(request):
 
 def subscription_success(request):
     return render(request,'user/user/success.html')
+
+
+class UserRegistrationView(View):
+    def get(self, request):
+        form = UserSignupForm()
+        return render(request, 'user/user/register.html', {'form': form})
+
+    def post(self, request):
+        form = UserSignupForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            print(user)
+            user.is_active = False  # Deactivate account until it is confirmed
+            user.save()
+            otp = random.randint(100000, 999999)
+            print(otp)
+            UserOTP.objects.create(user=user, otp=otp)
+            send_mail(
+                subject='Your OTP for registration',
+                message=f'Your OTP is {otp}',
+                from_email='rajputking7976@gmail.com',
+                recipient_list=[user.email],
+            )
+            request.session['user_id'] = user.id
+            return redirect('otp-confirmation')
+        return render(request, 'user/user/register.html', {'form': form})
+
+class OTPConfirmationView(View):
+    def get(self, request):
+        form = OTPForm()
+        return render(request, 'user/user/otp_verification.html', {'form': form})
+
+    def post(self, request):
+        form = OTPForm(request.POST)
+        if form.is_valid():
+            otp = form.cleaned_data['otp']
+            user_id = request.session.get('user_id')
+            user_otp = UserOTP.objects.get(user__id=user_id)
+            if user_otp.otp == otp:
+                user = user_otp.user
+                user.is_active = True
+                user.save()
+                user_otp.delete()
+                return redirect('user-home')
+        return render(request, 'user/user/otp_verification.html', {'form': form})
